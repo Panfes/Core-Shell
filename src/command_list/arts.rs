@@ -27,16 +27,7 @@ pub const WELCOME: &str = r#"
 ╚██████╗╚██████╔╝██║  ██║███████╗
  ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝
 ╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
-user core
-status root
-host x79
-os EndeavourOS x86_64
-kernel 6.9.0-arch1-1
-shell kitty
-uptime 3d 7h 42m
-pkgs 1842 (pacman)
-memory 4.2G / 16G
-╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+
 "#;
 
 pub const CAT_EGG_ART: &str = r#"
