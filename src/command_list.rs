@@ -13,10 +13,14 @@ pub enum ShellCommand {
 
 impl ShellCommand {
     pub fn parse(input: &str) -> Option<Self> {
-        
         let input = input.trim();
 
-        let cmd = input.split_whitespace().next()?; // Просто заглядываем на первое слово
+        let parts = input.split_once(' ');
+
+        let cmd = match parts {
+            Some((first, _)) => first,
+            None => input,
+        };
 
         match cmd {
             "help" => Some(ShellCommand::Help),
@@ -48,16 +52,22 @@ impl ShellCommand {
 
             Self::Sys(raw) => {
 
-                let mut parts = raw.split_whitespace(); // Вот тут уже настоящий сплит
+                let mut parts = raw.split_whitespace();
+                let program = match parts.next() {
+                    Some(name) => name,
+                    None => return,
+                };
 
-                if let Some(program) = parts.next() {
-                    let child = Command::new(program)
-                        .args(parts)
-                        .spawn();
+                let result = Command::new(program)
+                    .args(parts)
+                    .spawn();
 
-                    match child {
-                        Ok(mut process) => { let _ = process.wait(); },
-                        Err(e) => { eprintln!("Core-Shell Command not found: {}", e); },
+                match result {
+                    Ok(mut child) => {
+                        let _ = child.wait();
+                    }
+                    Err(e) => {
+                        eprintln!("Core-Shell: ¯\\_(ツ)_/¯ '{}' not found ({})", program, e);
                     }
                 }
 
