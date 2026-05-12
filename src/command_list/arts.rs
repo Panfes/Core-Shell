@@ -1,7 +1,8 @@
+#![allow(dead_code)]
+use std::env;
+use rand::prelude::*;
 // ASCII arts
 // On 231 line the functions begin
-#![allow(dead_code)]
-use rand::prelude::*;
 
 pub fn show_random_art() {
         let mut rng = rand::thread_rng();
@@ -18,16 +19,17 @@ pub fn show_random_art() {
 
 
 pub const WELCOME: &str = r#"
-
-
- ██████╗ ██████╗ ██████╗ ███████╗
-██╔════╝██╔═══██╗██╔══██╗██╔════╝
-██║     ██║   ██║██████╔╝█████╗
-██║     ██║   ██║██╔══██╗██╔══╝
-╚██████╗╚██████╔╝██║  ██║███████╗
- ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝
-╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
-
+⠀⠀⢀⣤⣤⣤⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⢸⣿⣿⣿⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠘⠉⠉⠙⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀CORE-SHELL PROJECTS
+⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⡀⠀⠀⠀⠀"Stay in the flow"
+⠀⠀⠀⠀⣴⣿⣿⣿⠟⣿⣿⣿⣷⠀⠀⠀⠀------------------
+⠀⠀⠀⣰⣿⣿⣿⡏⠀⠸⣿⣿⣿⣇⠀⠀⠀version: 0.1.3
+⠀⠀⢠⣿⣿⣿⡟⠀⠀⠀⢻⣿⣿⣿⡆⠀⠀
+⠀⢠⣿⣿⣿⡿⠀⠀⠀⠀⠀⢿⣿⣿⣷⣤⡄
+⢀⣾⣿⣿⣿⠁⠀⠀⠀⠀⠀⠈⠿⣿⣿⣿⡇
 "#;
 
 pub const CAT_EGG_ART: &str = r#"
@@ -204,7 +206,26 @@ pub const IDK: &str = r#"
 "#;
 
 pub fn welcome() {
-    println!("{WELCOME}");
+    let username = env::var("USER").unwrap_or_else(|_| "user".to_string());
+    let version = "0.1.3";
+    
+    // Используем format!, чтобы собрать арт и переменные вместе
+    let art = format!(
+r#"
+⢀⣤⣤⣤⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⢸⣿⣿⣿⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠀
+⠘⠉⠉⠙⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⢸⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀   CORE-SHELL PROJECT
+⠀⠀⠀⠀⣼⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀   "Stay in the flow"
+⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⡀⠀⠀⠀⠀   ------------------
+⠀⠀⣴⣿⣿⣿⠟⣿⣿⣿⣷⠀⠀⠀⠀   version:  {}
+⠀⣰⣿⣿⣿⡏⠀⠸⣿⣿⣿⣇⠀⠀⠀   identity: [{}]
+⢠⣿⣿⣿⡟⠀⠀⠀⢻⣿⣿⣿⡆⠀⠀   status:   system_ready
+⢠⣿⣿⣿⡿⠀⠀⠀⠀⠀⢿⣿⣿⣷⣤⡄ 
+⣾⣿⣿⣿⠁⠀⠀⠀⠀⠀⠈⠿⣿⣿⣿⡇ 
+"#, version, username);
+
+    println!("\x1b[36m{}\x1b[0m", art);
 }
 
 fn show_cat_egg() {

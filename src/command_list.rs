@@ -16,20 +16,23 @@ impl ShellCommand {
         
         let input = input.trim();
 
-        let cmd = input.split_whitespace().next()?;
+        let cmd = input.split_whitespace().next()?; // Просто заглядываем на первое слово
 
         match cmd {
             "help" => Some(ShellCommand::Help),
             "exit" => Some(ShellCommand::Exit),
             "ascii" => Some(ShellCommand::Ascii),
             "quote" => Some(ShellCommand::Quote),
-            _ => Some(ShellCommand::Sys(input.to_string())),
+            _ => Some(ShellCommand::Sys(input.to_string())), // Алокация без которой никуда
         }
     }
 
     pub fn run(&self) {
         match self {
-            Self::Exit => std::process::exit(0),
+            Self::Exit => {
+                println!("Bye!\n");
+                std::process::exit(0);
+            },
 
             Self::Ascii => {
                 arts::show_random_art();
@@ -45,7 +48,7 @@ impl ShellCommand {
 
             Self::Sys(raw) => {
 
-                let mut parts = raw.split_whitespace();
+                let mut parts = raw.split_whitespace(); // Вот тут уже настоящий сплит
 
                 if let Some(program) = parts.next() {
                     let child = Command::new(program)

@@ -12,29 +12,21 @@ fn main() {
     loop {
         buf.clear();
 
-        print!("\n λ ❯");
-        match io::stdout().flush() {
-            Ok(_) => {},
-            Err(e) => {
-                println!("{}", e);
-                panic!("aaa!!!");
-            }
+        print!("\nλ ❯");
+        if let Err(e) = io::stdout().flush() {
+            eprintln!("Buffer flush error: {}", e);
         }
 
-        match io::stdin().read_line(&mut buf) {
-            Ok(_) => {}
-            Err(e) => {
-                eprintln!("Error: {}", e);
-                panic!();
-            },
+        let bytes_read = io::stdin().read_line(&mut buf).unwrap_or(0);
+        if bytes_read == 0 {
+            println!("\nBye!\n");
+            break;
         }
 
         if buf.trim().is_empty() { continue; }
 
         if let Some(cmd) = command_list::ShellCommand::parse(&buf) {
             cmd.run();
-        } else {
-            println!("Unknown command\ntype help for commands list");
-        }
+        }     
     }
 }
