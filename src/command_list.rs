@@ -1,25 +1,25 @@
-use std::process::Command;
+use std::{env, process::Command};
+use std::path::Path;
 pub mod arts;
 pub mod quote;
 
 
-pub enum ShellCommand {
+pub enum ShellCommand<'a> {
     Help,
     Exit,
     Ascii,
     Quote,
-    Sys(String),
+    Cd(&'a str),
+    Sys(&'a str),
 }
 
-impl ShellCommand {
-    pub fn parse(input: &str) -> Option<Self> {
+impl<'a> ShellCommand<'a> {
+    pub fn parse(input: &'a str) -> Option<Self> {
         let input = input.trim();
 
-        let parts = input.split_once(' ');
-
-        let cmd = match parts {
-            Some((first, _)) => first,
-            None => input,
+        let (cmd, args) = match input.split_once(' ') {
+            Some((first, rest)) => (first, rest),
+            None => (input, ""),
         };
 
         match cmd {
@@ -27,7 +27,8 @@ impl ShellCommand {
             "exit" => Some(ShellCommand::Exit),
             "ascii" => Some(ShellCommand::Ascii),
             "quote" => Some(ShellCommand::Quote),
-            _ => Some(ShellCommand::Sys(input.to_string())), // Алокация без которой никуда
+            "cd" => Some(ShellCommand::Cd(args)),
+            _ => Some(ShellCommand::Sys(input)), 
         }
     }
 
@@ -37,21 +38,16 @@ impl ShellCommand {
                 println!("Bye!\n");
                 std::process::exit(0);
             },
-
             Self::Ascii => {
                 arts::show_random_art();
             }
-
             Self::Help => {
                 println!(
                     "exit - close terminal app\nascii - displays a drawing\nquote - displays a quote\nhelp - show this message"
                 );
             }
-
             Self::Quote => quote::show_random_quote(),
-
             Self::Sys(raw) => {
-
                 let mut parts = raw.split_whitespace();
                 let program = match parts.next() {
                     Some(name) => name,
@@ -71,6 +67,18 @@ impl ShellCommand {
                     }
                 }
 
+            }
+            Self::Cd(path_str) => {
+                let path_str = path_str.trim();
+                if path_str.is_empty() {
+                    eprintln!("Core-Shell: cd: path required");
+                    return;
+                }
+
+                let new_path = Path::new(path_str);
+                if let Err(e) = env::set_current_dir(new_path) {
+                    eprintln!("Core-Shell: cd: failed to chande directory to '{}': {}", path_str, e );
+                }
             }
 
         }
