@@ -1,5 +1,5 @@
 use std::io::{self, Write};
-use crate::command::ShellCommand;
+use crate::utils::{parser, executor};
 
 pub fn run() {
     let mut buf = String::new();
@@ -16,15 +16,15 @@ pub fn run() {
             Ok(0) => break,
             Ok(_) => {},
             Err(e) => {
-                eprintln!("Core-Shell: failed to read buf: {}", e);
+                eprintln!("Core-Shell: failed to read Buffer: {}", e);
                 continue;
             }
         }
 
         if buf.trim().is_empty() { continue; }
         
-        if let Some(cmd) = ShellCommand::parse(&buf) {
-            cmd.run();
+        if let Some(cmd) = parser::parse_line(&buf) {
+            executor::execute(cmd);
         }
     }
 
